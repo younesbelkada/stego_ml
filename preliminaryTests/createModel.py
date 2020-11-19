@@ -64,3 +64,17 @@ def evaluateWithInputId(model, indexed_tokens, nLikely=0):
   #assert predicted_text == 'Who was Jim Henson? Jim Henson was a man'
   predicted_indizes=indexed_tokens + [predicted_index]
   return predicted_text, predicted_indizes
+
+def getSecretTokens(model, tokenizer, startingInd, addedInd, k=0):
+  """Return the secret message tokens stepwise"""
+  tokens_tensor = torch.tensor([startingInd])
+
+  # If you have a GPU, put everything on cuda
+  tokens_tensor = tokens_tensor.to('cuda')
+  model.to('cuda')
+  with torch.no_grad():
+    outputs = model(tokens_tensor)
+    predictions = outputs[0]
+
+  ordered_index = torch.where(torch.argsort(predictions[0, -1, :], descending=True)==addedInd)[0]
+  return ordered_index
