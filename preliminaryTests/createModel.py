@@ -60,10 +60,12 @@ def evaluateWithInputId(model, indexed_tokens, nLikely=0):
   #predicted_index = torch.argmax(predictions[0, -1, :]).item()
   #print(predicted_index)
   predicted_index = torch.argsort(predictions[0, -1, :], descending=True)[nLikely].item()
-  predicted_text = tokenizer.decode(indexed_tokens + [predicted_index])
+  #predicted_text = tokenizer.decode(indexed_tokens + [predicted_index])
+  
   #assert predicted_text == 'Who was Jim Henson? Jim Henson was a man'
   predicted_indizes=indexed_tokens + [predicted_index]
-  return predicted_text, predicted_indizes
+  #return predicted_text, predicted_indizes
+  return predicted_indizes
 
 def getSecretTokens(model, tokenizer, startingInd, addedInd, k=0):
   """Return the secret message tokens stepwise"""
