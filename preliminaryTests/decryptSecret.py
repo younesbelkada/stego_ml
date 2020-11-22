@@ -25,3 +25,16 @@ def getTextFromText(publicText, startingSecret="Secret: ", startingText="This ye
         outInd=evaluateWithInputId(mod, outInd, ranks[i]) # We can find be faster, with past for example or so
     outText=tok.decode(outInd)    
     return outText
+    
+def getTextFromInd(publicInd, startingSecret="Secret: ", startingText="This year's Shakespeare Festival"):
+    mod, tok=buildModelGPT()
+    #ranks=getSecretRanks(publicText, startingText)
+    indizes=publicInd
+    ranks=recoverSecretRanks(startingText, indizes)
+    #print(ranks)
+    outText=startingSecret
+    outInd=tok.encode(startingSecret)
+    for i in range(len(ranks)):
+        outInd=evaluateWithInputId(mod, outInd, ranks[i]) # We can find be faster, with past for example or so
+    outText=tok.decode(outInd)    
+    return outText
