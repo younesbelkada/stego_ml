@@ -13,9 +13,9 @@ def buildModelGPT():
   """
   ## Create Model
   # Load pre-trained model tokenizer (vocabulary)
-  tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+  tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium')
   # Load pre-trained model (weights)
-  model = GPT2LMHeadModel.from_pretrained('gpt2')
+  model = GPT2LMHeadModel.from_pretrained('gpt2-medium')
 
   # Set the model in evaluation mode to deactivate the DropOut modules
   # This is IMPORTANT to have reproducible results during evaluation!

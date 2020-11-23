@@ -2,8 +2,8 @@
 from createModel import *
 import numpy as np
 
-def recoverSecretRanks(startingText, outInd):
-    mod_rec, tok_rec=buildModelGPT()
+def recoverSecretRanks(mod_rec, tok_rec, startingText, outInd):
+    #mod_rec, tok_rec=buildModelGPT()
     startingInd=tok_rec.encode(startingText)
     endingInd=outInd[len(startingInd):]
     secretTokensRec=np.zeros(len(endingInd), dtype=int)
@@ -13,11 +13,11 @@ def recoverSecretRanks(startingText, outInd):
       secretTokensRec[i]=token
     return secretTokensRec
 
-def getTextFromText(publicText, startingSecret="Secret: ", startingText="This year's Shakespeare Festival"):
-    mod, tok=buildModelGPT()
+def getTextFromText(mod, tok, publicText, startingSecret="Secret: ", startingText="This year's Shakespeare Festival"):
+    #mod, tok=buildModelGPT()
     #ranks=getSecretRanks(publicText, startingText)
     indizes=tok.encode(publicText)
-    ranks=recoverSecretRanks(startingText, indizes)
+    ranks=recoverSecretRanks(mod, tok, startingText, indizes)
     #print(ranks)
     outText=startingSecret
     outInd=tok.encode(startingSecret)
@@ -26,11 +26,11 @@ def getTextFromText(publicText, startingSecret="Secret: ", startingText="This ye
     outText=tok.decode(outInd)    
     return outText
     
-def getTextFromInd(publicInd, startingSecret="Secret: ", startingText="This year's Shakespeare Festival"):
-    mod, tok=buildModelGPT()
+def getTextFromInd(mod, tok, publicInd, startingSecret="Secret: ", startingText="This year's Shakespeare Festival"):
+    #mod, tok=buildModelGPT()
     #ranks=getSecretRanks(publicText, startingText)
     indizes=publicInd
-    ranks=recoverSecretRanks(startingText, indizes)
+    ranks=recoverSecretRanks(mod, tok, startingText, indizes)
     #print(ranks)
     outText=startingSecret
     outInd=tok.encode(startingSecret)
