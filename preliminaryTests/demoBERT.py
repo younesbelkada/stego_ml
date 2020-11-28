@@ -7,7 +7,7 @@ from transformers import BertTokenizer, BertLMHeadModel
 
 def buildModelBERT():    
   """ 
-  This function builds the model of the function und returns it based on GPT
+  This function builds the model of the function und returns it based on BERT
   """
   ## Create Model
   # Load pre-trained model tokenizer (vocabulary)
