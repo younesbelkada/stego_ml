@@ -7,15 +7,15 @@ torch.manual_seed(0)
 #import logging
 #logging.basicConfig(level=logging.INFO)
 
-def buildModelGPT():    
+def buildModelGPT(modelType='gpt2-medium'):    
   """ 
   This function builds the model of the function und returns it based on GPT
   """
   ## Create Model
   # Load pre-trained model tokenizer (vocabulary)
-  tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium')
+  tokenizer = GPT2Tokenizer.from_pretrained(modelType)
   # Load pre-trained model (weights)
-  model = GPT2LMHeadModel.from_pretrained('gpt2-medium')
+  model = GPT2LMHeadModel.from_pretrained(modelType)
 
   # Set the model in evaluation mode to deactivate the DropOut modules
   # This is IMPORTANT to have reproducible results during evaluation!
