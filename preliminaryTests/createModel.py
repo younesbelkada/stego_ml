@@ -1,7 +1,7 @@
 ## Important Imports:   A lot from https://huggingface.co/transformers/quickstart.html
 #!pip install -q git+https://github.com/huggingface/transformers.git
 import torch
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
+from transformers import GPT2Tokenizer, GPT2LMHeadModel, RobertaTokenizer, RobertaForCausalLM, RobertaConfig
 torch.manual_seed(0)
 # OPTIONAL: if you want to have more information on what's happening, activate the logger as follows
 #import logging
@@ -16,6 +16,22 @@ def buildModelGPT(modelType='gpt2-medium'):
   tokenizer = GPT2Tokenizer.from_pretrained(modelType)
   # Load pre-trained model (weights)
   model = GPT2LMHeadModel.from_pretrained(modelType)
+
+  # Set the model in evaluation mode to deactivate the DropOut modules
+  # This is IMPORTANT to have reproducible results during evaluation!
+  model.eval()
+  return model, tokenizer
+
+def buildModelRoBERTa():    
+  """ 
+  This function builds the model of the function und returns it based on RoBERTa
+  """
+  ## Create Model
+  # Load pre-trained model tokenizer (vocabulary)
+  tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
+  config = RobertaConfig.from_pretrained("roberta-base") 
+  config.is_decoder = True
+  model = RobertaForCausalLM.from_pretrained('roberta-base', config=config)
 
   # Set the model in evaluation mode to deactivate the DropOut modules
   # This is IMPORTANT to have reproducible results during evaluation!

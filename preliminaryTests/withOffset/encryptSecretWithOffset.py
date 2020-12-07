@@ -12,6 +12,7 @@ def getSecretRanks(mod, tok, secretText="This is too secret for Joe Biden!", sta
         ranksSecret.append(getSecretTokens(mod, tok, totalEnc[:i], totalEnc[i]).item())
     ranksSecret=np.array(ranksSecret)
     ranksSecret[ranksSecret>2]+=1 #Create offset
+    ranksSecret=np.append(ranksSecret, 3)
     return ranksSecret
 
 def completeMessage(mod, tok, ind, max_length=50):
