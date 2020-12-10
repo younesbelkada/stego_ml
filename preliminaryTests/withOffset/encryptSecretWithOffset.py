@@ -3,20 +3,28 @@ from createModel import *
 import numpy as np
 
 def getSecretRanks(mod, tok, secretText="This is too secret for Joe Biden!", startingSecret="Secret: "):
-    #mod, tok=buildModelGPT()
-    secretTextEnc=tok.encode(secretText)
+    secretTextEnc=[]
+    arrayNumber=int(np.ceil(len(secretText)/1000))
+    """secret_np=np.array(secretText.split(sep=' '))
+    subarrays=np.array_split(secret_np, arrayNumber)"""
+    #subarrays=np.split(np.array(secretText), arrayNumber)
+    for n in range(arrayNumber):
+      end=min(len(secretText),(n+1)*1000)
+      #secretTextEnc.extend(tok.encode(subarray.tolist()))
+      secretTextEnc.extend(tok.encode(secretText[n*1000:(n+1)*1000]))
     totalEnc=tok.encode(startingSecret)
     totalEnc.extend(secretTextEnc)
     ranksSecret=[]
     for i in range(len(tok.encode(startingSecret)), len(totalEnc)):
-        ranksSecret.append(getSecretTokens(mod, tok, totalEnc[:i], totalEnc[i]).item())
+        start=max(i-1000, 0)
+        ranksSecret.append(getSecretTokens(mod, tok, totalEnc[start:i], totalEnc[i]).item())
     ranksSecret=np.array(ranksSecret)
     ranksSecret[ranksSecret>2]+=1 #Create offset
     ranksSecret=np.append(ranksSecret, 3)
-    return ranksSecret
+    return ranksSecret#, totalEnc
 
 def completeMessage(mod, tok, ind, max_length=50):
-    tokens_tensor = torch.tensor([ind])
+    tokens_tensor = torch.tensor([ind[-1000:]])
     # If you have a GPU, put everything on cuda
     tokens_tensor = tokens_tensor.to('cuda')
     mod.to('cuda')

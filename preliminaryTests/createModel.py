@@ -42,7 +42,7 @@ def evaluateWithInputText(model=buildModelGPT()[0], tokenizer=buildModelGPT()[1]
   indexed_tokens = tokenizer.encode(text)
 
   # Convert indexed tokens in a PyTorch tensor
-  tokens_tensor = torch.tensor([indexed_tokens])
+  tokens_tensor = torch.tensor([indexed_tokens[-1000:]])
 
   # If you have a GPU, put everything on cuda
   tokens_tensor = tokens_tensor.to('cuda')
@@ -63,7 +63,7 @@ def evaluateWithInputText(model=buildModelGPT()[0], tokenizer=buildModelGPT()[1]
 
 def evaluateWithInputId(model, indexed_tokens, nLikely=0):
   # Convert indexed tokens in a PyTorch tensor
-  tokens_tensor = torch.tensor([indexed_tokens])
+  tokens_tensor = torch.tensor([indexed_tokens[-1000:]])
 
   # If you have a GPU, put everything on cuda
   tokens_tensor = tokens_tensor.to('cuda')
