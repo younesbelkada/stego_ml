@@ -2,7 +2,7 @@
 from createModel import *
 import numpy as np
 
-def recoverSecretRanks(mod_rec, tok_rec, startingText, outInd):
+def recoverSecretRanks(mod_rec, tok_rec, startingText, outInd, finishSentence=True):
     #mod_rec, tok_rec=buildModelGPT()
     startingInd=tok_rec.encode(startingText)
     endingInd=outInd[len(startingInd):]
@@ -10,19 +10,20 @@ def recoverSecretRanks(mod_rec, tok_rec, startingText, outInd):
     secretTokensRec=[]
     for i in range(len(endingInd)):
       token=getSecretTokens(mod_rec, tok_rec, startingInd, endingInd[i])
-      if (token==3):
-        break
-      if(token>2):
-        token-=1
+      if (finishSentence):
+        if (token==3):
+          break
+        if(token>2):
+          token-=1
       startingInd.append(endingInd[i])
       secretTokensRec.append(token[0].tolist())
     return secretTokensRec
 
-def getTextFromText(mod, tok, publicText, startingSecret="Secret: ", startingText="This year's Shakespeare Festival"):
+def getTextFromText(mod, tok, publicText, startingSecret="Secret: ", startingText="This year's Shakespeare Festival", finishSentence=True):
     #mod, tok=buildModelGPT()
     #ranks=getSecretRanks(publicText, startingText)
     indizes=tok.encode(publicText)
-    ranks=recoverSecretRanks(mod, tok, startingText, indizes)
+    ranks=recoverSecretRanks(mod, tok, startingText, indizes, finishSentence)
     #print(ranks)
     outText=startingSecret
     outInd=tok.encode(startingSecret)
@@ -31,11 +32,11 @@ def getTextFromText(mod, tok, publicText, startingSecret="Secret: ", startingTex
     outText=tok.decode(outInd)    
     return outText
     
-def getTextFromInd(mod, tok, publicInd, startingSecret="Secret: ", startingText="This year's Shakespeare Festival"):
+def getTextFromInd(mod, tok, publicInd, startingSecret="Secret: ", startingText="This year's Shakespeare Festival", finishSentence=True):
     #mod, tok=buildModelGPT()
     #ranks=getSecretRanks(publicText, startingText)
     indizes=publicInd
-    ranks=recoverSecretRanks(mod, tok, startingText, indizes)
+    ranks=recoverSecretRanks(mod, tok, startingText, indizes, finishSentence)
     #print(ranks)
     outText=startingSecret
     outInd=tok.encode(startingSecret)

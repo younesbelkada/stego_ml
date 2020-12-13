@@ -72,14 +72,9 @@ def evaluateWithInputId(model, indexed_tokens, nLikely=0):
     outputs = model(tokens_tensor)
     predictions = outputs[0]
 
-  # get the predicted next sub-word (in our case, the word 'man')
-  #predicted_index = torch.argmax(predictions[0, -1, :]).item()
-  #print(predicted_index)
   predicted_index = torch.argsort(predictions[0, -1, :], descending=True)[nLikely].item()
-  #predicted_text = tokenizer.decode(indexed_tokens + [predicted_index])
-  
-  #assert predicted_text == 'Who was Jim Henson? Jim Henson was a man'
   predicted_indizes=indexed_tokens + [predicted_index]
+  #tokens_tensor=torch.cat((tokens_tensor, torch.argsort(predictions[0, -1, :], descending=True)[nLikely].to('cuda')), 0)
   #return predicted_text, predicted_indizes
   return predicted_indizes
 
