@@ -2,16 +2,21 @@
 from createModel import *
 import numpy as np
 
-def getSecretRanks(mod, tok, secretText="This is too secret for Joe Biden!", startingSecret="Secret: "):
+def getSecretRanks(mod, tok, secretText="This is too secret for Joe Biden!", startingSecret="Secret: ", finishSentence=True):
     secretTextEnc=[]
-    arrayNumber=int(np.ceil(len(secretText)/1000))
+    arrayNumber=int(np.ceil(len(secretText)/900))
     """secret_np=np.array(secretText.split(sep=' '))
     subarrays=np.array_split(secret_np, arrayNumber)"""
     #subarrays=np.split(np.array(secretText), arrayNumber)
+    start=0
     for n in range(arrayNumber):
-      end=min(len(secretText),(n+1)*1000)
+      end=secretText.find(" ",(n+1)*900, (n+1)*900+100)
+      if (end==-1):
+        end=min(len(secretText),(n+1)*1000)
+      encode=secretText[start:end]
       #secretTextEnc.extend(tok.encode(subarray.tolist()))
-      secretTextEnc.extend(tok.encode(secretText[n*1000:(n+1)*1000]))
+      secretTextEnc.extend(tok.encode(encode))
+      start=end
     totalEnc=tok.encode(startingSecret)
     totalEnc.extend(secretTextEnc)
     ranksSecret=[]
@@ -19,8 +24,9 @@ def getSecretRanks(mod, tok, secretText="This is too secret for Joe Biden!", sta
         start=max(i-1000, 0)
         ranksSecret.append(getSecretTokens(mod, tok, totalEnc[start:i], totalEnc[i]).item())
     ranksSecret=np.array(ranksSecret)
-    ranksSecret[ranksSecret>2]+=1 #Create offset
-    ranksSecret=np.append(ranksSecret, 3)
+    if (finishSentence):
+        ranksSecret[ranksSecret>2]+=1 #Create offset
+        ranksSecret=np.append(ranksSecret, 3)
     return ranksSecret#, totalEnc
 
 def completeMessage(mod, tok, ind, max_length=50):
@@ -37,14 +43,17 @@ def completeMessage(mod, tok, ind, max_length=50):
     outText=tok.decode(outInd)
     return outText, outInd
 
-def encryptMessage(mod, tok, secretText="This is too secret for Joe Biden!", startingSecret="Secret: ", startingText="This year's Shakespeare Festival"):
+def encryptMessage(mod, tok, secretText="This is too secret for Joe Biden!", startingSecret="Secret: ", startingText="This year's Shakespeare Festival", finishSentence=True):
     #mod, tok=buildModelGPT()
-    ranks=getSecretRanks(mod, tok, secretText, startingSecret)
+    ranks=getSecretRanks(mod, tok, secretText, startingSecret, finishSentence)
     #print(ranks)
     outInd=tok.encode(startingText)
     for i in range(len(ranks)):
         outInd=evaluateWithInputId(mod, outInd, ranks[i]) # We can find be faster, with past for example or so
-    #outText=tok.decode(outInd) ## This will be passed forward
-    outText, outInd=completeMessage(mod, tok, outInd, max_length=50)
+    if (finishSentence):    
+        outText, outInd=completeMessage(mod, tok, outInd, max_length=50)
+    else:
+        outText=tok.decode(outInd) ## This will be passed forward
     return outText, outInd
+
 
