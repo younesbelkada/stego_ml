@@ -62,7 +62,7 @@ def buildModelBERT():
     model.eval()
     return model, tokenizer
 
-def buildModel(modelType="GPT2-medium"):
+def buildModel(modelType="gpt2-medium"):
     """
     Helper Function to build the model based on the user input
     """
