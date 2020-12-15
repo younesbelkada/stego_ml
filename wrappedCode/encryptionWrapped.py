@@ -62,7 +62,19 @@ def encryptMessage_GPT(mod, tok, secretText="This is too secret for Joe Biden!",
 
 ## Part for Bert
 
-def getRanks_BERT(mod, tok, precondSec, secret):
+def completeMessage_BERT(mod, tok, ind, max_length=50):
+  tokens_tensor = torch.tensor([ind])
+  outInd = mod.generate(tokens_tensor, max_length=50)
+  outText=tok.decode(outInd[0].tolist())
+  newText=outText[len(tok.decode(ind)):]
+  newText=newText.split(sep=".", maxsplit=1)[0]
+  newText="".join((newText, "."))
+  outInd=ind+tok.encode(newText)
+  #outText=tok.decode(outInd)
+  #return outText, outInd
+  return outInd
+
+def getRanks_BERT(mod, tok, precondSec, secret, completeMessage):
   ## Encoding
   inputs = tok.encode(precondSec, return_tensors="pt", add_special_tokens=False)
   secret_token = tok.encode(secret, return_tensors="pt", add_special_tokens=False)[0]
@@ -75,9 +87,13 @@ def getRanks_BERT(mod, tok, precondSec, secret):
     tab = [np.append(tab[0],s)]
     inputs = torch.Tensor(tab).type(torch.long)
   #print("ranks before:", ranks)
+  ranks=np.array(ranks)
+  if (completeMessage):
+    ranks[ranks>2]+=1
+    ranks=np.append(ranks, 3)
   return ranks
 
-def generateCoverText_BERT(mod, tok, startOfText, ranks):
+def generateCoverText_BERT(mod, tok, startOfText, ranks, completeMessage):
   inputs = tok.encode(startOfText, return_tensors="pt", add_special_tokens=False)
   for s in ranks:
     tab = inputs.numpy()
@@ -85,18 +101,20 @@ def generateCoverText_BERT(mod, tok, startOfText, ranks):
     index = torch.argsort(pred[0, -1, :], descending=True)[s]
     tab = [np.append(tab[0],index)]
     inputs = torch.Tensor(tab).type(torch.long)
+  if (completeMessage):
+    inputs=completeMessage_BERT(mod, tok, inputs.tolist()[0])
   cover_text = tok.decode(inputs[0])
   return cover_text
 
 def encryptMessage_BERT(mod, tok, secret, precondSec, startOfText, completeMessage=True):
-  ranks = getRanks_BERT(mod, tok, precondSec, secret)
-  cover_text = generateCoverText_BERT(mod, tok, startOfText, ranks)
+  ranks = getRanks_BERT(mod, tok, precondSec, secret, completeMessage)
+  cover_text = generateCoverText_BERT(mod, tok, startOfText, ranks, completeMessage)
   return cover_text
 
 
 
 ## Part for RoBERTa
-def getRanks_RoBERTa(mod, tok, precondSec, secret):
+def getRanks_RoBERTa(mod, tok, precondSec, secret, completeMessage=True):
   ## Encoding
   inputs = tok.encode(precondSec, return_tensors="pt", add_special_tokens=False)
   secret_token = tok.encode(secret, return_tensors="pt", add_special_tokens=False)[0]
@@ -109,8 +127,9 @@ def getRanks_RoBERTa(mod, tok, precondSec, secret):
     tab = [np.append(tab[0],s)]
     inputs = torch.Tensor(tab).type(torch.long)
   ranks=np.array(ranks)
-  ranks[ranks>2]+=1
-  ranks=np.append(ranks, 3)
+  if (completeMessage):
+    ranks[ranks>2]+=1
+    ranks=np.append(ranks, 3)
   #print("ranks before:", ranks)
   return ranks
 
@@ -126,7 +145,7 @@ def completeMessage_RoBERTa(mod, tok, ind, max_length=50):
   #return outText, outInd
   return outInd
 
-def generateCoverText_RoBERTa(mod, tok, startOfText, ranks):
+def generateCoverText_RoBERTa(mod, tok, startOfText, ranks, completeMessage=True):
   inputs = tok.encode(startOfText, return_tensors="pt", add_special_tokens=False)
   for s in ranks:
     tab = inputs.numpy()
@@ -134,13 +153,15 @@ def generateCoverText_RoBERTa(mod, tok, startOfText, ranks):
     index = torch.argsort(pred[0, -1, :], descending=True)[s]
     tab = [np.append(tab[0],index)]
     inputs = torch.Tensor(tab).type(torch.long)
-  inputs=completeMessage_RoBERTa(mod, tok, inputs.tolist()[0])
+  inputs=inputs.tolist()[0]
+  if (completeMessage):
+    inputs=completeMessage_RoBERTa(mod, tok, inputs)
   cover_text = tok.decode(inputs)
   return cover_text
 
 def encryptMessage_RoBERTa(mod, tok, secret, precondSec, startOfText, completeMessage=True):
-  ranks = getRanks_RoBERTa(mod, tok, precondSec, secret)
-  cover_text = generateCoverText_RoBERTa(mod, tok, startOfText, ranks)
+  ranks = getRanks_RoBERTa(mod, tok, precondSec, secret, completeMessage)
+  cover_text = generateCoverText_RoBERTa(mod, tok, startOfText, ranks, completeMessage)
   return cover_text
 
 
