@@ -1,8 +1,8 @@
 ## Part for GPT
 
 """ File for the encryption side of things, the sender! """
-from .createModel import *
-from .evaluationModelHelpers import *
+from createModel import *
+from evaluationModelHelpers import *
 import numpy as np
 import torch
 #from transformers import RobertaTokenizer, RobertaForCausalLM, RobertaConfig

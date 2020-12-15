@@ -1,8 +1,8 @@
 import numpy as np
 import torch
-from .evaluationModelHelpers import *
-from .createModel import getModelType
-from .encryptionWrapped import *
+from evaluationModelHelpers import *
+from createModel import getModelType
+from encryptionWrapped import *
 ## Part for GPT
 def recoverSecretRanks_GPT(mod_rec, tok_rec, startingText, outInd, finishSentence=True):
     #mod_rec, tok_rec=buildModelGPT()
@@ -11,7 +11,7 @@ def recoverSecretRanks_GPT(mod_rec, tok_rec, startingText, outInd, finishSentenc
     #secretTokensRec=np.zeros(len(endingInd), dtype=int)
     secretTokensRec=[]
     for i in range(len(endingInd)):
-      token=getSecretTokens_GPT(mod_rec, tok_rec, startingInd, endingInd[i])
+      token=getTokens_GPT(mod_rec, tok_rec, startingInd, endingInd[i])
       if (finishSentence):
         if (token==3):
           break
@@ -98,7 +98,7 @@ def decryptRoBERTa (mod, tok, cover_text, precondSec, startOfText, completeMessa
 def decryptMessage(mod, tok, coverText, precondSec, startOfText, completeMessage=True):
     modelType=getModelType(mod)
     if (modelType=="gpt2"):
-        text, ind = encryptMessage_GPT(mod, tok, coverText, precondSec, startOfText, finishSentence=completeMessage)
+        text, ind = getTextFromText_GPT(mod, tok, coverText, precondSec, startOfText, finishSentence=completeMessage)
     elif (modelType=="bert"):
         text=decryptRoBERTa(mod, tok, coverText, precondSec, startOfText, completeMessage)
         return text
