@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 from evaluationModelHelpers import *
+from createModel import getModelType
 ## Part for GPT
 def recoverSecretRanks_GPT(mod_rec, tok_rec, startingText, outInd, finishSentence=True):
     #mod_rec, tok_rec=buildModelGPT()
@@ -45,10 +46,8 @@ def getTextFromInd_GPT(mod, tok, publicInd, startingSecret="Secret: ", startingT
     outText=tok.decode(outInd)    
     return outText
 
-## Part BERT
 
-
-## Part for RoBERTa
+## Part for RoBERTa/ BERT
 def getRanksFromCover_RoBERTa(mod, tok, cover_text, startOfText, completeMessage=True):
   inputs_cover = tok.encode(cover_text, return_tensors="pt", add_special_tokens=False)
 
@@ -89,7 +88,20 @@ def getSecretFromRanks_RoBERTa(mod, tok, precondSec, ranks):
   retrived_text = tok.decode(inputs[0])
   return retrived_text
 
-def decryptRoBERTa (mod, tok, cover_text, precondSec, startOfText):
-  ranks=getRanksFromCover_RoBERTa(mod, tok, cover_text, startOfText)
+def decryptRoBERTa (mod, tok, cover_text, precondSec, startOfText, completeMessage):
+  ranks=getRanksFromCover_RoBERTa(mod, tok, cover_text, startOfText, completeMessage)
   secretText=getSecretFromRanks_RoBERTa(mod, tok, precondSec, ranks)
   return secretText
+
+
+def decryptMessage(mod, tok, coverText, precondSec, startOfText, completeMessage=True):
+    modelType=getModelType(mod)
+    if (modelType=="gpt2"):
+        text, ind=encryptMessage_GPT(mod, tok, coverText, precondSec, startOfText, finishSentence=completeMessage)
+    elif (modelType=="bert"):
+        text=decryptRoBERTa(mod, tok, secret, coverText, startOfText, completeMessage=completeMessage)
+    elif (modelType=="roBERTa"):
+        text=decryptRoBERTa(mod, tok, secret, coverText, startOfText, completeMessage=completeMessage)
+    else:
+        print("ERRROR")
+    return text, ind

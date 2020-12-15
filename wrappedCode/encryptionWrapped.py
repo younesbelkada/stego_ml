@@ -101,9 +101,10 @@ def generateCoverText_BERT(mod, tok, startOfText, ranks, completeMessage):
     index = torch.argsort(pred[0, -1, :], descending=True)[s]
     tab = [np.append(tab[0],index)]
     inputs = torch.Tensor(tab).type(torch.long)
+  inputs=inputs.tolist()[0]
   if (completeMessage):
-    inputs=completeMessage_BERT(mod, tok, inputs.tolist()[0])
-  cover_text = tok.decode(inputs[0])
+    inputs=completeMessage_BERT(mod, tok, inputs)
+  cover_text = tok.decode(inputs)
   return cover_text
 
 def encryptMessage_BERT(mod, tok, secret, precondSec, startOfText, completeMessage=True):
