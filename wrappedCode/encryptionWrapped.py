@@ -179,4 +179,6 @@ def encryptMessage(mod, tok, secret, precondSec, startOfText, completeMessage=Tr
         text=encryptMessage_RoBERTa(mod, tok, secret, precondSec, startOfText, completeMessage=completeMessage)
     else:
         print("ERRROR")
+    if not (np.all(tok.encode(text)== ind)):
+      print("WARNING: They may be some issues during the decryption")
     return text, ind

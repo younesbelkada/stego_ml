@@ -21,6 +21,8 @@ def recoverSecretRanks_GPT(mod_rec, tok_rec, startingText, outInd, finishSentenc
       secretTokensRec.append(token[0].tolist())
     return secretTokensRec
 
+
+
 def getTextFromText_GPT(mod, tok, publicText, startingSecret="Secret: ", startingText="This year's Shakespeare Festival", finishSentence=True):
     #mod, tok=buildModelGPT()
     #ranks=getSecretRanks(publicText, startingText)
@@ -101,11 +103,10 @@ def decryptMessage(mod, tok, coverText, precondSec, startOfText, completeMessage
         text = getTextFromText_GPT(mod, tok, coverText, precondSec, startOfText, finishSentence=completeMessage)
     elif (modelType=="bert"):
         text=decryptRoBERTa(mod, tok, coverText, precondSec, startOfText, completeMessage)
-        return text
     elif (modelType=="roBERTa"):
         text=decryptRoBERTa(mod, tok, coverText, precondSec, startOfText, completeMessage)
-        return text
     else:
         print("ERRROR")
         return 0
+    text = text[len(precondSec):]
     return text

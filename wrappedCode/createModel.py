@@ -1,6 +1,7 @@
 import torch
+import logging 
 from transformers import GPT2Tokenizer, GPT2LMHeadModel, RobertaTokenizer, RobertaForCausalLM, RobertaConfig, BertTokenizer, BertLMHeadModel
-
+logging.getLogger('transformers.tokenization_utils').setLevel(logging.ERROR)
 torch.manual_seed(0)
 
 def getModelType(input):
@@ -10,9 +11,9 @@ def getModelType(input):
     modType=""
     if(input.name_or_path) in ["gpt2-medium", "gpt2-large", "gpt2", "gpt2-xl"]:
         modType="gpt2"
-    elif(input.name_or_path) in ['roberta-base']:
+    elif(input.name_or_path) in ['roberta-base', 'roberta']:
         modType="roBERTa"
-    elif(input.name_or_path) in ["bert-base-uncased"]:
+    elif(input.name_or_path) in ["bert-base-uncased", "bert"]:
         modType="bert"
     return modType
 
