@@ -1,7 +1,7 @@
 # stego-mirror-transformer
 Implementation of Text Steganography using two differently conditioned language models. Our protocol supports different kind of models such as :
 
-* gpt2: small, medium, large, xl
+* gpt2: ***small, medium, large, xl***
 * bert
 * roberta
 
