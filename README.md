@@ -1,4 +1,4 @@
-# stego-mirror-transformer
+#  STLM: Steganography in Text using Language Models
 Implementation of Text Steganography using two differently conditioned language models. 
 
 <p align="center">
