@@ -1,6 +1,13 @@
 # stego-mirror-transformer
-Implementation of Text Steganography using two differently conditioned language models. Our protocol supports different kind of models such as :
+Implementation of Text Steganography using two differently conditioned language models. 
 
+<p align="center">
+  <img align="center" src="https://github.com/epfml/stego-mirror-transformer/blob/main/AliceBobEncryption.png" width=30% height=50%>
+</p>
+
+
+
+Our protocol supports different kind of models such as :
 * gpt2: ***small, medium, large, xl***
 * BERT
 * RoBERTa
