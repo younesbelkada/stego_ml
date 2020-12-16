@@ -11,3 +11,5 @@ You can play with our protocol through the notebook ```DemoStego.ipynb```. You c
 
 
 ## Run on Google Colabs
+
+Adversarial Detection: [here](https://colab.research.google.com/drive/1HKIk6sDs5lL7j2IZ6skX6MIbI4dSxl11?usp=sharing)
