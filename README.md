@@ -18,8 +18,11 @@ You can play with our protocol through the notebook ```DemoStego.ipynb```. You c
 
 ### Experiments in the local machine:
 
-We advice you to have at least 8GB of RAM and ideally a properly working GPU.
-First, run ```pip install -r requirements.txt```. After that :
+We advice you to have at least 8GB of RAM and ideally a properly working GPU. First, run :
+
+```pip install -r requirements.txt```
+
+After that :
 ```jupyter-notebook``` and select the ```DemoStego.ipynb``` notebook.
 After this step, you can just follow the tutorial explained in the notebook
 
