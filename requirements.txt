@@ -2,3 +2,6 @@ torch
 transformers
 numpy
 matplotlib
+googleapis-common-protos
+google-api-core
+protobuf

@@ -26,6 +26,11 @@ After that :
 ```jupyter-notebook``` and select the ```DemoStego.ipynb``` notebook.
 After this step, you can just follow the tutorial explained in the notebook
 
+If you have a virtual environement please add you virtual env to the notebook with the following command :
+```
+ipython kernel install --name "your-venv" --user
+```
+
 ### Run on Google Colabs
 
 If you do not have enough computational power and want to have a quick try, please refer to our (user-friendly) Google Colab shared notebook [here](https://colab.research.google.com/drive/1xxNllyn2h2kw2IQoTHQmQ1amztYfqxp0?usp=sharing)
