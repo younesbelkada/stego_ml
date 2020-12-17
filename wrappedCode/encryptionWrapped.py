@@ -34,6 +34,9 @@ def getRanks_GPT(mod, tok, secretText="This is too secret for Joe Biden!", start
     return ranksSecret
 
 def completeMessage_GPT(mod, tok, ind, max_length=50):
+    """
+    Function to complete the final sentence of the text created by GPT2 model
+    """
     tokens_tensor = torch.tensor([ind[-1000:]])
     # If you have a GPU, put everything on cuda
     tokens_tensor = tokens_tensor.to('cuda')
@@ -48,21 +51,25 @@ def completeMessage_GPT(mod, tok, ind, max_length=50):
     return outText, outInd
 
 def encryptMessage_GPT(mod, tok, secretText="This is too secret for Joe Biden!", startingSecret="Secret: ", startingText="This year's Shakespeare Festival", finishSentence=True):
-    #mod, tok=buildModelGPT()
+    """
+    Encryption function for GPT2 Model
+    """
     ranks=getRanks_GPT(mod, tok, secretText, startingSecret, finishSentence)
-    #print(ranks)
     outInd=tok.encode(startingText)
     for i in range(len(ranks)):
-        outInd=evaluateWithInputId_GPT(mod, outInd, ranks[i]) # We can find be faster, with past for example or so
+        outInd=evaluateWithInputId_GPT(mod, outInd, ranks[i]) 
     if (finishSentence):    
         outText, outInd=completeMessage_GPT(mod, tok, outInd, max_length=50)
     else:
-        outText=tok.decode(outInd) ## This will be passed forward
+        outText=tok.decode(outInd) 
     return outText, outInd
 
 ## Part for Bert
 
 def completeMessage_BERT(mod, tok, ind, max_length=50):
+  """
+  Sentence Completion of the secret text from BERT
+  """ 
   tokens_tensor = torch.tensor([ind])
   outInd = mod.generate(tokens_tensor, max_length=50)
   outText=tok.decode(outInd[0].tolist())
@@ -73,7 +80,9 @@ def completeMessage_BERT(mod, tok, ind, max_length=50):
   return outInd
 
 def getRanks_BERT(mod, tok, precondSec, secret, completeMessage):
-  ## Encoding
+  """
+  Function to calculate the ranks of the secret text
+  """
   inputs = tok.encode(precondSec, return_tensors="pt", add_special_tokens=False)
   secret_token = tok.encode(secret, return_tensors="pt", add_special_tokens=False)[0]
   ranks = []
@@ -91,6 +100,9 @@ def getRanks_BERT(mod, tok, precondSec, secret, completeMessage):
   return ranks
 
 def generateCoverText_BERT(mod, tok, startOfText, ranks, completeMessage):
+  """
+  Function to get the cover text that is sent from Alice to Bob based on the ranks of the secret text
+  """
   inputs = tok.encode(startOfText, return_tensors="pt", add_special_tokens=False)
   for s in ranks:
     tab = inputs.numpy()
@@ -105,6 +117,9 @@ def generateCoverText_BERT(mod, tok, startOfText, ranks, completeMessage):
   return cover_text, inputs
 
 def encryptMessage_BERT(mod, tok, secret, precondSec, startOfText, completeMessage=True):
+  """
+  Function to encrypt the message using BERT
+  """
   ranks = getRanks_BERT(mod, tok, precondSec, secret, completeMessage)
   cover_text, ind = generateCoverText_BERT(mod, tok, startOfText, ranks, completeMessage)
   return cover_text, ind
@@ -113,7 +128,9 @@ def encryptMessage_BERT(mod, tok, secret, precondSec, startOfText, completeMessa
 
 ## Part for RoBERTa
 def getRanks_RoBERTa(mod, tok, precondSec, secret, completeMessage=True):
-  ## Encoding
+  """
+  Function to calculate the Ranks of the secret text for RoBERTa language model
+  """
   inputs = tok.encode(precondSec, return_tensors="pt", add_special_tokens=False)
   secret_token = tok.encode(secret, return_tensors="pt", add_special_tokens=False)[0]
   ranks = []
@@ -131,6 +148,9 @@ def getRanks_RoBERTa(mod, tok, precondSec, secret, completeMessage=True):
   return ranks
 
 def completeMessage_RoBERTa(mod, tok, ind, max_length=50):
+  """
+  Function to complete the message based on RoBERTa LM
+  """
   tokens_tensor = torch.tensor([ind])
   outInd = mod.generate(tokens_tensor, max_length=50)
   outText=tok.decode(outInd[0].tolist())
@@ -143,6 +163,9 @@ def completeMessage_RoBERTa(mod, tok, ind, max_length=50):
   return outInd
 
 def generateCoverText_RoBERTa(mod, tok, startOfText, ranks, completeMessage=True):
+  """
+  Function to generate the cover text given the ranks of the secret text to be hidden 
+  """
   inputs = tok.encode(startOfText, return_tensors="pt", add_special_tokens=False)
   for s in ranks:
     tab = inputs.numpy()
@@ -157,6 +180,9 @@ def generateCoverText_RoBERTa(mod, tok, startOfText, ranks, completeMessage=True
   return cover_text, inputs
 
 def encryptMessage_RoBERTa(mod, tok, secret, precondSec, startOfText, completeMessage=True):
+  """
+  Function to encrypt the message using RoBERTa
+  """
   ranks = getRanks_RoBERTa(mod, tok, precondSec, secret, completeMessage)
   cover_text, indices = generateCoverText_RoBERTa(mod, tok, startOfText, ranks, completeMessage)
   return cover_text, indices
@@ -165,6 +191,10 @@ def encryptMessage_RoBERTa(mod, tok, secret, precondSec, startOfText, completeMe
 
 ## Overall together
 def encryptMessage(mod, tok, secret, precondSec, startOfText, completeMessage=True):
+  """
+  Wrapper function to choose the correct model to encrypt with. 
+  """
+  
     modelType=getModelType(mod)
     ind="Null"
     enryptionProblem=True
