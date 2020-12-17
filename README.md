@@ -2,7 +2,7 @@
 Implementation of Text Steganography using two differently conditioned language models. 
 
 <p align="center">
-  <img align="center" src="https://github.com/epfml/stego-mirror-transformer/blob/main/AliceBobEncryption.png" width=50% height=70%>
+  <img align="center" src="https://github.com/CS-433/cs-433-project-2-stego_ml/blob/main/AliceBobEncryption.png" width=50% height=70%>
 </p>
 
 
