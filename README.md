@@ -52,6 +52,10 @@ Inside the notebook :
 * Unzip the folder on your Drive (using !unzip <folder_name> inside the colab notebook).
 * Replace the path by ```/content/drive/MyDrive/data/```
 
+### Run the notebook
+
+Just follow the steps inside the notebook 
+
 ## Core structure
 
 ### Protocol 
