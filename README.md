@@ -37,9 +37,20 @@ If you do not have enough computational power and want to have a quick try, plea
 
 ## Experiments on Adversarial attacks
 
-We explain all the experiments that we did for adversarial attacks in this notebook. 
+We explain all the experiments that we did for adversarial attacks in this notebook [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1HKIk6sDs5lL7j2IZ6skX6MIbI4dSxl11?usp=sharing)
 
-Adversarial Detection: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1HKIk6sDs5lL7j2IZ6skX6MIbI4dSxl11?usp=sharing)
+
+### Requirements
+
+Fist of all, you need to get the testing data from this [public folder](https://drive.google.com/drive/folders/1oNIYVuZ8aym6IRQTLGq77alXbs44Kv2e?usp=sharing). After that :
+* Log into Google Drive.
+* In Google Drive, make a folder named ```data```
+
+Inside the notebook :
+* Mount the notebook to the Drive
+* cd to ```/content/drive/MyDrive/```
+* Unzip the folder on your Drive (using !unzip <folder_name> inside the colab notebook).
+* Replace the path by ```/content/drive/MyDrive/data/```
 
 ## Core structure
 
