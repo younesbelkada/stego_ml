@@ -14,7 +14,7 @@ Our protocol supports different kind of models such as :
 
 ## Usage
 
-You can play with our protocol through the notebook ```DemoStego.ipynb```. You can either run it on your local machine if you have enough computational power, or use the colabs version for a quick demo : **link**.
+You can play with our protocol through the notebook ```DemoStego.ipynb```. You can either run it on your local machine if you have enough computational power, or use the colabs version for a quick demo : [![Open In Colab](https://colab.research.google.com/drive/1xxNllyn2h2kw2IQoTHQmQ1amztYfqxp0?usp=sharing)
 
 ### Experiments in the local machine:
 
