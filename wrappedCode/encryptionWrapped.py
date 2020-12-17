@@ -31,7 +31,7 @@ def getRanks_GPT(mod, tok, secretText="This is too secret for Joe Biden!", start
     if (finishSentence):
         ranksSecret[ranksSecret>2]+=1 #Create offset
         ranksSecret=np.append(ranksSecret, 3)
-    return ranksSecret#, totalEnc
+    return ranksSecret
 
 def completeMessage_GPT(mod, tok, ind, max_length=50):
     tokens_tensor = torch.tensor([ind[-1000:]])
@@ -70,8 +70,6 @@ def completeMessage_BERT(mod, tok, ind, max_length=50):
   newText=newText.split(sep=".", maxsplit=1)[0]
   newText="".join((newText, "."))
   outInd=ind+tok.encode(newText)
-  #outText=tok.decode(outInd)
-  #return outText, outInd
   return outInd
 
 def getRanks_BERT(mod, tok, precondSec, secret, completeMessage):
@@ -86,7 +84,6 @@ def getRanks_BERT(mod, tok, precondSec, secret, completeMessage):
     ranks.append(index)
     tab = [np.append(tab[0],s)]
     inputs = torch.Tensor(tab).type(torch.long)
-  #print("ranks before:", ranks)
   ranks=np.array(ranks)
   if (completeMessage):
     ranks[ranks>2]+=1
@@ -105,12 +102,12 @@ def generateCoverText_BERT(mod, tok, startOfText, ranks, completeMessage):
   if (completeMessage):
     inputs=completeMessage_BERT(mod, tok, inputs)
   cover_text = tok.decode(inputs)
-  return cover_text
+  return cover_text, inputs
 
 def encryptMessage_BERT(mod, tok, secret, precondSec, startOfText, completeMessage=True):
   ranks = getRanks_BERT(mod, tok, precondSec, secret, completeMessage)
-  cover_text = generateCoverText_BERT(mod, tok, startOfText, ranks, completeMessage)
-  return cover_text
+  cover_text, ind = generateCoverText_BERT(mod, tok, startOfText, ranks, completeMessage)
+  return cover_text, ind
 
 
 
@@ -131,7 +128,6 @@ def getRanks_RoBERTa(mod, tok, precondSec, secret, completeMessage=True):
   if (completeMessage):
     ranks[ranks>2]+=1
     ranks=np.append(ranks, 3)
-  #print("ranks before:", ranks)
   return ranks
 
 def completeMessage_RoBERTa(mod, tok, ind, max_length=50):
@@ -158,12 +154,12 @@ def generateCoverText_RoBERTa(mod, tok, startOfText, ranks, completeMessage=True
   if (completeMessage):
     inputs=completeMessage_RoBERTa(mod, tok, inputs)
   cover_text = tok.decode(inputs)
-  return cover_text
+  return cover_text, inputs
 
 def encryptMessage_RoBERTa(mod, tok, secret, precondSec, startOfText, completeMessage=True):
   ranks = getRanks_RoBERTa(mod, tok, precondSec, secret, completeMessage)
-  cover_text = generateCoverText_RoBERTa(mod, tok, startOfText, ranks, completeMessage)
-  return cover_text
+  cover_text, indices = generateCoverText_RoBERTa(mod, tok, startOfText, ranks, completeMessage)
+  return cover_text, indices
 
 
 
@@ -171,12 +167,16 @@ def encryptMessage_RoBERTa(mod, tok, secret, precondSec, startOfText, completeMe
 def encryptMessage(mod, tok, secret, precondSec, startOfText, completeMessage=True):
     modelType=getModelType(mod)
     ind="Null"
+    enryptionProblem=True
     if (modelType=="gpt2"):
         text, ind=encryptMessage_GPT(mod, tok, secret, precondSec, startOfText, finishSentence=completeMessage)
+        encryptionProblem= ~np.all(tok.encode(text)== ind)
     elif (modelType=="bert"):
-        text=encryptMessage_BERT(mod, tok, secret, precondSec, startOfText, completeMessage=completeMessage)
+        text, ind=encryptMessage_BERT(mod, tok, secret, precondSec, startOfText, completeMessage=completeMessage)
+        encryptionProblem= ~np.all(tok.encode(text)[1:-1]== ind)
     elif (modelType=="roBERTa"):
-        text=encryptMessage_RoBERTa(mod, tok, secret, precondSec, startOfText, completeMessage=completeMessage)
+        text, ind=encryptMessage_RoBERTa(mod, tok, secret, precondSec, startOfText, completeMessage=completeMessage)
+        encryptionProblem= ~np.all(tok.encode(text)[1:-1]== ind)
     else:
         print("ERRROR")
     if not (np.all(tok.encode(text)== ind)):
