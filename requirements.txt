@@ -5,3 +5,10 @@ matplotlib
 googleapis-common-protos
 google-api-core
 protobuf
+pandas
+fasttext
+simpletransformers
+scikit-learn
+pycopy-errno
+seaborn
+torchtext
