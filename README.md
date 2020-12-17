@@ -33,7 +33,7 @@ ipython kernel install --name "your-venv" --user
 
 ### Run on Google Colabs
 
-If you do not have enough computational power and want to have a quick try, please refer to our (user-friendly) Google Colab shared notebook [here](https://colab.research.google.com/drive/1xxNllyn2h2kw2IQoTHQmQ1amztYfqxp0?usp=sharing)
+If you do not have enough computational power and want to have a quick try, please refer to our (user-friendly) Google Colab shared notebook [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1xxNllyn2h2kw2IQoTHQmQ1amztYfqxp0?usp=sharing)
 
 ## Experiments on Adversarial attacks
 
