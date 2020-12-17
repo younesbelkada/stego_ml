@@ -195,20 +195,20 @@ def encryptMessage(mod, tok, secret, precondSec, startOfText, completeMessage=Tr
   Wrapper function to choose the correct model to encrypt with. 
   """
   
-    modelType=getModelType(mod)
-    ind="Null"
-    enryptionProblem=True
-    if (modelType=="gpt2"):
-        text, ind=encryptMessage_GPT(mod, tok, secret, precondSec, startOfText, finishSentence=completeMessage)
-        encryptionProblem= ~np.all(tok.encode(text)== ind)
-    elif (modelType=="bert"):
-        text, ind=encryptMessage_BERT(mod, tok, secret, precondSec, startOfText, completeMessage=completeMessage)
-        encryptionProblem= ~np.all(tok.encode(text)[1:-1]== ind)
-    elif (modelType=="roBERTa"):
-        text, ind=encryptMessage_RoBERTa(mod, tok, secret, precondSec, startOfText, completeMessage=completeMessage)
-        encryptionProblem= ~np.all(tok.encode(text)[1:-1]== ind)
-    else:
-        print("ERRROR")
-    if not (np.all(tok.encode(text)== ind)):
-      print("WARNING: They may be some issues during the decryption")
-    return text, ind
+  modelType=getModelType(mod)
+  ind="Null"
+  enryptionProblem=True
+  if (modelType=="gpt2"):
+      text, ind=encryptMessage_GPT(mod, tok, secret, precondSec, startOfText, finishSentence=completeMessage)
+      encryptionProblem= ~np.all(tok.encode(text)== ind)
+  elif (modelType=="bert"):
+      text, ind=encryptMessage_BERT(mod, tok, secret, precondSec, startOfText, completeMessage=completeMessage)
+      encryptionProblem= ~np.all(tok.encode(text)[1:-1]== ind)
+  elif (modelType=="roBERTa"):
+      text, ind=encryptMessage_RoBERTa(mod, tok, secret, precondSec, startOfText, completeMessage=completeMessage)
+      encryptionProblem= ~np.all(tok.encode(text)[1:-1]== ind)
+  else:
+      print("ERRROR")
+  if not (np.all(tok.encode(text)== ind)):
+    print("WARNING: They may be some issues during the decryption")
+  return text, ind
