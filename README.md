@@ -51,6 +51,7 @@ Inside the notebook :
 * cd to ```/content/drive/MyDrive/data```
 * Unzip the folder on your Drive (using !unzip <folder_name> inside the colab notebook).
 * Replace the path by ```/content/drive/MyDrive/data/```
+* cd again to ```/```
 
 ### Run the notebook
 
