@@ -52,3 +52,12 @@ The function ```encryptMessage``` wrapps all the functions defined in the file `
 
 The function ```decryptMessage``` wrapps all the functions defined in the file ```decryptionWrapped.py```. Depending on the model you choose, there is a specific function for rank retrieval and secret generation.
 
+## Testing set
+
+If you want to have a look at the testing set where we have evaluated our models and generated our cover texts, you can have freely access on them at [here](https://drive.google.com/drive/folders/1oNIYVuZ8aym6IRQTLGq77alXbs44Kv2e?usp=sharing)
+
+### Folder structure
+
+* **Raw articles new**: Contains all the raw articles considered as the secret that we want to share. Those articles have been selected from the DailyMail corpus
+* **Preconditionings new**: Contains the preconditionings associated for every article. Each article that we want to cover has its own specific preconditioning
+* **Generated texts <model_name>**: Contains the generated texts using the model <model_name> where we did our evaluations
