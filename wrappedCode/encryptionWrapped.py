@@ -210,5 +210,5 @@ def encryptMessage(mod, tok, secret, precondSec, startOfText, completeMessage=Tr
   else:
       print("ERRROR")
   if not (np.all(tok.encode(text)== ind)):
-    print("WARNING: They may be some issues during the decryption")
+    print("WARNING: They may be some issues during the decryption, you may want to change the preconditioning of the cover text to have an accurate result")
   return text, ind
